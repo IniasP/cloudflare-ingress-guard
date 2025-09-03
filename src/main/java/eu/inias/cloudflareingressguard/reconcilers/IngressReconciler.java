@@ -28,12 +28,13 @@ public class IngressReconciler implements Reconciler<Ingress> {
 
     @Override
     public UpdateControl<Ingress> reconcile(Ingress ingress, Context<Ingress> context) {
+        String ingressIdentifier = ingress.getMetadata().getNamespace() + "/" + ingress.getMetadata().getName();
+
         Map<String, String> annotations = ingress.getMetadata().getAnnotations();
         if (annotations == null || !"true".equals(annotations.get(CF_GUARD_ANNOTATION))) {
+            LOGGER.warn("Unprotected ingress {}.", ingressIdentifier);
             return UpdateControl.noUpdate();
         }
-
-        String ingressIdentifier = ingress.getMetadata().getNamespace() + "/" + ingress.getMetadata().getName();
 
         String current = String.join(",", cloudflareIpsService.getCachedCloudflareIps());
         String previous = annotations.put(
