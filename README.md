@@ -2,6 +2,8 @@
 
 **Cloudflare Ingress Guard** is a small Kubernetes controller that protects your ingresses by automatically restricting
 access to [Cloudflare’s official IP ranges](https://www.cloudflare.com/ips/).
+The result is that it is no longer possible to bypass Cloudflare's "orange cloud" proxy service for DNS records pointing
+to those ingresses.
 It is designed to work with the **NGINX Ingress Controller**.
 
 ## Usage
