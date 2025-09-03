@@ -49,6 +49,7 @@ public class IngressReconciler implements Reconciler<Ingress> {
         }
 
         ingress.getMetadata().setAnnotations(annotations);
+        ingress.getMetadata().setManagedFields(null);
 
         return UpdateControl.patchResource(ingress);
     }
