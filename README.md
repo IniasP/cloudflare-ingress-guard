@@ -8,6 +8,8 @@ It is designed to work with the **NGINX Ingress Controller**.
 
 ## Usage
 
+**IMPORTANT**: make sure your nginx ingress controller is configured with `service.externalTrafficPolicy: Local`. Otherwise, the filter will see an internal cluster IP instead of the connecting Cloudflare IP.
+
 The controller watches all `Ingress` resources in the cluster.
 If an ingress has the annotation:
 
