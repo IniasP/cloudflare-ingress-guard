@@ -12,7 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @ControllerConfiguration(
-        maxReconciliationInterval = @MaxReconciliationInterval(interval = 7, timeUnit = TimeUnit.DAYS)
+        maxReconciliationInterval = @MaxReconciliationInterval(interval = 7, timeUnit = TimeUnit.DAYS),
+        generationAwareEventProcessing = false
 )
 public class IngressReconciler implements Reconciler<Ingress> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IngressReconciler.class);
