@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -37,16 +38,18 @@ public class IngressReconciler implements Reconciler<Ingress> {
             return UpdateControl.noUpdate();
         }
 
-        String current = String.join(",", cloudflareIpsService.getCachedCloudflareIps());
-        String previous = annotations.put(
-                NGINX_WHITELIST_ANNOTATION,
-                current
-        );
-        if (previous == null || !previous.equals(current)) {
-            LOGGER.info("Updating IP whitelist for ingress {}: {}.", ingressIdentifier, current);
-        } else {
-            LOGGER.info("Ingress {} already protected.", ingressIdentifier);
-            return UpdateControl.noUpdate();
+        if ("true".equals(annotations.get(CF_GUARD_ANNOTATION))) {
+            String newWhitelist = String.join(",", cloudflareIpsService.getCachedCloudflareIps());
+            String previousWhitelist = annotations.put(NGINX_WHITELIST_ANNOTATION, newWhitelist);
+            if (Objects.equals(previousWhitelist, newWhitelist)) {
+                LOGGER.info("Ingress {} already protected.", ingressIdentifier);
+                return UpdateControl.noUpdate();
+            } else {
+                LOGGER.info("Updating IP whitelist for ingress {}: {}.", ingressIdentifier, newWhitelist);
+            }
+        } else if ("false".equals(annotations.get(CF_GUARD_ANNOTATION))) {
+            annotations.remove(NGINX_WHITELIST_ANNOTATION);
+            LOGGER.info("Removing IP whitelist for ingress {}.", ingressIdentifier);
         }
 
         ingress.getMetadata().setAnnotations(annotations);
