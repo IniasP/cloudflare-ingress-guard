@@ -28,6 +28,13 @@ is set with the current Cloudflare IPv4 and IPv6 ranges.
 Cloudflare IP ranges are fetched directly from Cloudflare (https://www.cloudflare.com/ips-v4
 and https://www.cloudflare.com/ips-v6) and cached for 7 days.
 
+## Caveats
+
+If the `whitelist-source-range` annotation is already present, existing IP ranges it may contain are *not* preserved.
+
+When the `cloudflare-ingress-guard.inias.eu/enabled` annotation is removed, the NGINX whitelist annotation will not be removed or cleaned up. Cleanup should be done manually; you may want to specify another type of protection or a different whitelist.
+Alternatively, explicitly setting `cloudflare-ingress-guard.inias.eu/enabled: false` will drop any existing whitelist. This makes it easier to toggle the functionality for testing or debugging.
+
 ## Example
 
 ```yaml
