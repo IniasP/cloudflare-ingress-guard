@@ -74,6 +74,20 @@ jobs:
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # Generate Docker tags based on the following events/attributes
+          tags: |
+            # Semantic versioning tags for releases (e.g., v1.2.3)
+            type=semver,pattern={{version}}
+            # Major.minor version tags (e.g., 1.2)
+            type=semver,pattern={{major}}.{{minor}}
+            # Major version tags (e.g., 1)
+            type=semver,pattern={{major}}
+            # Branch name for branch pushes
+            type=ref,event=branch
+            # PR number for pull requests
+            type=ref,event=pr
+            # Latest tag for main branch
+            type=raw,value=latest,enable={{is_default_branch}}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
