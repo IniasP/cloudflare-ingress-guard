@@ -4,10 +4,11 @@
     "config:recommended"
   ],
   "configMigration": true,
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": [
-        "^\\.github/workflows/docker-publish\\.yml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/docker-publish\\.yml$/"
       ],
       "matchStrings": [
         "cosign-release:\\s*'(?<currentValue>v[0-9]+\\.[0-9]+\\.[0-9]+)'"
