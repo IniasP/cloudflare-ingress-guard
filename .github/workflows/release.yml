@@ -1,4 +1,4 @@
-name: Maven Release
+name: Release
 
 on:
   workflow_dispatch:
@@ -85,3 +85,13 @@ jobs:
       - name: Maven Release Perform
         run: |
           mvn --batch-mode release:perform
+
+      - name: Create GitHub Release with changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.calculate_version.outputs.release_version }}"
+          
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes
