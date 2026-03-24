@@ -35,7 +35,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <josdk-spring-boot-starter.version>6.4.0</josdk-spring-boot-starter.version>
-        <josdk.version>5.2.3</josdk.version>
+        <josdk.version>5.3.1</josdk.version>
         <fabric8-client.version>7.6.1</fabric8-client.version>
     </properties>
 
@@ -83,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>io.javaoperatorsdk</groupId>
-            <artifactId>operator-framework-junit-5</artifactId>
+            <artifactId>operator-framework-junit</artifactId>
             <version>${josdk.version}</version>
             <scope>test</scope>
         </dependency>
