@@ -33,12 +33,14 @@ public class IngressReconciler implements Reconciler<Ingress> {
         String ingressIdentifier = ingress.getMetadata().getNamespace() + "/" + ingress.getMetadata().getName();
 
         Map<String, String> annotations = ingress.getMetadata().getAnnotations();
-        if (annotations == null || !"true".equals(annotations.get(CF_GUARD_ANNOTATION))) {
+        String annotationValue = annotations != null ? annotations.get(CF_GUARD_ANNOTATION) : null;
+
+        if (annotationValue == null) {
             LOGGER.warn("Unprotected ingress {}.", ingressIdentifier);
             return UpdateControl.noUpdate();
         }
 
-        if ("true".equals(annotations.get(CF_GUARD_ANNOTATION))) {
+        if ("true".equals(annotationValue)) {
             String newWhitelist = String.join(",", cloudflareIpsService.getCachedCloudflareIps());
             String previousWhitelist = annotations.put(NGINX_WHITELIST_ANNOTATION, newWhitelist);
             if (Objects.equals(previousWhitelist, newWhitelist)) {
@@ -47,9 +49,13 @@ public class IngressReconciler implements Reconciler<Ingress> {
             } else {
                 LOGGER.info("Updating IP whitelist for ingress {}: {}.", ingressIdentifier, newWhitelist);
             }
-        } else if ("false".equals(annotations.get(CF_GUARD_ANNOTATION))) {
+        } else if ("false".equals(annotationValue)) {
             annotations.remove(NGINX_WHITELIST_ANNOTATION);
             LOGGER.info("Removing IP whitelist for ingress {}.", ingressIdentifier);
+        } else {
+            LOGGER.warn("Ingress {} has unrecognised value '{}' for annotation {}; ignoring.",
+                    ingressIdentifier, annotationValue, CF_GUARD_ANNOTATION);
+            return UpdateControl.noUpdate();
         }
 
         ingress.getMetadata().setAnnotations(annotations);
