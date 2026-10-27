@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25@sha256:2d5d5e9b533342a565907c84f47a2ec298c40cde7b13a3ca85d4950fa456a641
+FROM eclipse-temurin:25@sha256:317010528a5eafaa13a1ea9fa194fae3959c57646306972391bc785cd3acd91b
 
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
