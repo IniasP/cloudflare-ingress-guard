@@ -3,6 +3,19 @@
   "extends": [
     "config:best-practices"
   ],
+  "packageRules": [
+    {
+      "description": "JOSDK, its Spring Boot starter, fabric8 and Spring Boot are version-locked to each other; upgrade them together.",
+      "matchManagers": ["maven"],
+      "matchPackageNames": [
+        "org.springframework.boot:**",
+        "io.javaoperatorsdk:**",
+        "io.fabric8:**"
+      ],
+      "groupName": "JOSDK / fabric8 / Spring Boot",
+      "separateMajorMinor": false
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
